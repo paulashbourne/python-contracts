@@ -1,3 +1,11 @@
+class FunctionCall(object):
+
+    def __init__(self, func, *args, **kwargs):
+        pass
+
+    def get_argument(self, param_name):
+        # Gets the value of the argument from either args or kwargs
+
 class ContractedFunction(object):
 
     def __init__(self, func):
