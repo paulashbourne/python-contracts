@@ -20,14 +20,12 @@ class FunctionCall(object):
 class ContractedFunction(object):
 
     def __init__(self, func):
-        print "ContractedFunction.__init__"
         self.func = func
 
         self.preconditions  = []
         self.postconditions = []
 
     def execute(self, *args, **kwargs):
-        print "ContractedFunction.execute"
         # Check preconditions
         for precondition in self.preconditions:
             precondition.execute_check(self.func, *args, **kwargs)
@@ -42,15 +40,12 @@ class ContractedFunction(object):
         return result
 
     def add_precondition(self, condition):
-        print "ContractedFunction.add_precondition"
         self.preconditions.append(condition)
 
     def add_postcondition(self, condition):
-        print "ContractedFunction.add_postcondition"
         self.postconditions.append(condition)
 
     def __call__(self, *args, **kwargs):
-        print "ContractedFunction.__call__"
         return self.execute(*args, **kwargs)
 
 class ContractDecorator(object):
@@ -76,7 +71,6 @@ class Precondition(ContractDecorator):
     # => check: lambda check, will be called with all args/kwargs
     # => description: string error message (optional)
     def __init__(self, arg1, arg2 = None, arg3 = None):
-        print "Precondition.__init__"
         if isinstance(arg1, basestring):
             # Precondition(param_name, check, description)
             self.param_name  = arg1
@@ -100,7 +94,6 @@ class Precondition(ContractDecorator):
             assert self.check(*args, **kwargs), self.error
 
     def __call__(self, func):
-        print "Precondition.__call__"
         if isinstance(func, ContractedFunction):
             func.add_precondition(self)
             return func
@@ -114,7 +107,6 @@ class Postcondition(ContractDecorator):
     DEFAULT_ERROR = "A postcondition failed"
 
     def __init__(self, check, description = None):
-        print "Postcondition.__init__"
         self.check       = check
         self.description = description
 
@@ -126,7 +118,6 @@ class Postcondition(ContractDecorator):
         return self.description if self.description else self.DEFAULT_ERROR
 
     def __call__(self, func):
-        print "Postcondition.__call__"
         if isinstance(func, ContractedFunction):
             func.add_postcondition(self)
             return func
@@ -137,6 +128,9 @@ class Postcondition(ContractDecorator):
 
 pre  = Precondition
 post = Postcondition
+
+def param_type(param_name, _type, description = None):
+    return pre(param_name, lambda p: isinstance(p, _type), description)
 
 # Preconditions:
 # @pre(check, error)

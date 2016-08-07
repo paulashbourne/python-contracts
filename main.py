@@ -1,6 +1,6 @@
-from contract import pre, post
+from contract import pre, post, param_type
 
-@pre('n', lambda n: type(n) == int, "n is an integer")
+@param_type('n', int, "n is an integer")
 @pre(lambda n: n >= 0, "n is at least zero")
 @post(lambda r: type(r) == int, "returns an integer")
 @post(lambda r: r >= 0, "return value is positive")
@@ -11,7 +11,7 @@ def fib(n):
         return fib(n-1) + fib(n-2)
 
 def main():
-    fib("foobar")
+    print fib(4)
 
 if __name__ == "__main__":
     main()
