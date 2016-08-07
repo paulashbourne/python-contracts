@@ -1,10 +1,21 @@
 class FunctionCall(object):
 
     def __init__(self, func, *args, **kwargs):
-        pass
+        self.func   = func
+        self.args   = args
+        self.kwargs = kwargs
+
+        # Init argument dict
+        self.arg_dict = {}
+        for pos, param_name in enumerate(func.func_code.co_varnames):
+            if param_name in kwargs:
+                self.arg_dict[param_name] = kwargs[param_name]
+            else:
+                self.arg_dict[param_name] = args[pos]
 
     def get_argument(self, param_name):
         # Gets the value of the argument from either args or kwargs
+        return self.arg_dict[param_name]
 
 class ContractedFunction(object):
 
