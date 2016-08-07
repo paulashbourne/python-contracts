@@ -30,7 +30,7 @@ class ContractedFunction(object):
         print "ContractedFunction.execute"
         # Check preconditions
         for precondition in self.preconditions:
-            precondition.execute_check(*args, **kwargs)
+            precondition.execute_check(self.func, *args, **kwargs)
 
         # Execute the function call
         result = self.func(*args, **kwargs)
@@ -92,8 +92,9 @@ class Precondition(ContractDecorator):
     def error(self):
         return self.description if self.description else self.DEFAULT_ERROR
 
-    def execute_check(self, *args, **kwargs):
+    def execute_check(self, func, *args, **kwargs):
         if self.param_name:
+            arg = FunctionCall(func, *args, **kwargs).get_argument(self.param_name)
             assert self.check(arg), self.error
         else:
             assert self.check(*args, **kwargs), self.error
