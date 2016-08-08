@@ -130,7 +130,14 @@ pre  = Precondition
 post = Postcondition
 
 def param_type(param_name, _type, description = None):
+    if description is None:
+        description = "%s is of type %s" % (param_name, type)
     return pre(param_name, lambda p: isinstance(p, _type), description)
+
+def return_type(_type, description = None):
+    if description is None:
+        description = "return value is of type %s" % (param_name, type)
+    return post(lambda p: isinstance(p, _type), description)
 
 # Preconditions:
 # @pre(check, error)
